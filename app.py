@@ -101,7 +101,7 @@ def sa_predict(model='all'):
         # flag error 
         return 'No Model exists for '+model
 
-    # db save to firestore
+    # db save to firestore (should re-use save rest service?)
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gkey.json"
     db = firestore.Client()
     j_data = {"from": "anonymous", "text": sentence, "scores": resp['results'],"date": datetime.datetime.now().isoformat("T")}
