@@ -3,6 +3,7 @@ from sklearn.externals import joblib
 from flask_cors import CORS
 import numpy as np
 import json
+import datetime
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import requests
@@ -61,10 +62,9 @@ def sa_history(max=50):
 
 @app.route('/nlp/save', methods=['POST'])
 def sa_save():
-    print('sa_history')
+    print('sa_save')
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gkey.json"
     db = firestore.Client()
-    print('db')
 
     j_data = request.get_json()
     print(j_data)
@@ -100,6 +100,15 @@ def sa_predict(model='all'):
     else:
         # flag error 
         return 'No Model exists for '+model
+
+    # db save to firestore
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gkey.json"
+    db = firestore.Client()
+    j_data = {"from": "anonymous", "text": sentence, "scores": resp['results'],"date": datetime.datetime.now().isoformat("T")}
+
+    doc_ref = db.collection(u'queries')
+    doc_ref.add(j_data)
+
     return json.dumps(resp)
 
 
