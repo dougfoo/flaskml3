@@ -30,8 +30,8 @@ def firestore_add(txt, fr='anon', dt=datetime.datetime.now()):
     doc_ref.add({
         u'text': txt,
         u'from': fr,
-        u'date': dt
+        u'date': dt.isoformat("T")
     })
 
-print(firestore_add('msg'))
+print(firestore_add('msg23'))
 print(firestore_fetch())
