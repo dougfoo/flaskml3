@@ -76,7 +76,8 @@ def sa_save():
 
 
 @app.route('/nlp/sa/<model>', methods=['GET'])
-def sa_predict(model='all', sentence='default sentence'):
+def sa_predict(model='all'):
+    sentence = request.args.get('data')
     print(sentence)
 
     resp = {}
