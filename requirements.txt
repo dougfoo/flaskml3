@@ -8,9 +8,12 @@ google-cloud==0.34.0
 google-cloud-firestore==1.6.1
 numpy==1.16.4
 numpydoc==0.8.0
+pandas==0.23.4
+gensim==3.8.1
 scikit-image==0.14.2
 scikit-learn==0.20.3
 vaderSentiment==3.2.1
 textblob==0.15.3
 flask-cors==3.0.8
 pip==19.3.1
+Unidecode==1.1.1
