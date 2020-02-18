@@ -19,8 +19,10 @@ CORS(app)
 
 nlp = FooNLP()
 models = {}
-models['tfidf.nb'] = nlp.load('/azmodels/tfidf.nb.fulltwitter.foonlp.ser')
+# models['tfidf.nb'] = nlp.load('/azmodels/tfidf.nb.fulltwitter.foonlp.ser')
 # models['w2v.lr'] = nlp.load('/azmodels/w2vcbow.lr.fulltwitter.foonlp.ser')
+models['tfidf.nb'] = nlp.load('models/tfidf.nb.fulltwitter.foonlp.ser')
+models['w2v.lr'] = nlp.load('models/w2vcbow.lr.fulltwitter.foonlp.ser')
 print('loaded models', models)
 
 
@@ -185,7 +187,7 @@ def custom_nlp1(text):
     resp['extra'] = 'model returns 0 to 1'
     resp['url'] = 'http://foostack.ai/'
     resp['rScore'] = prob[0][1]
-    resp['nScore'] = prob[0][1]
+    resp['nScore'] = 2 * (resp['rScore'] - 0.5) 
 
     return resp
 
@@ -203,7 +205,7 @@ def custom_nlp2(text):
     resp['extra'] = 'model returns 0 to 1'
     resp['url'] = 'http://foostack.ai/'
     resp['rScore'] = prob[0][1]
-    resp['nScore'] = prob[0][1]
+    resp['nScore'] = 2 * (resp['rScore'] - 0.5) 
 
     return resp
 

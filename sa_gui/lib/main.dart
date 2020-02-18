@@ -106,8 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _submit() async {
     print('submit clicked');
     // need to swap out hostname for dev cycle or make parametized
-    //   var host = '10.0.2.2:5000';   // for android emulator
-    //   var host = '127.0.0.1:5000';   // for web testing
+    // var host = 'http://10.0.2.2:5000/nlp/sa/all';   // for android emulator
+    //var host = 'http://127.0.0.1:5000/nlp/sa/all';   // for web testing
     //    var host = 'https://foonlpfunc.azurewebsites.net/api/SA';   // azure serverless
     var host = 'https://flaskmli3.azurewebsites.net/nlp/sa/all';
     var response = await http.get(host+'?data='+inputController.text);
