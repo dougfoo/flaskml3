@@ -16,7 +16,6 @@ vaderSentiment==3.2.1
 textblob==0.15.3
 flask-cors==3.0.8
 pip==19.3.1
-Unidecode==1.1.1
 scipy==1.1.0
 docutils==0.15
 dill==0.3.1
