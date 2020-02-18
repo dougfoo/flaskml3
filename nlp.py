@@ -3,7 +3,6 @@ import os
 import unidecode
 import statistics
 import pickle
-import compress_pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -11,7 +10,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.naive_bayes import BernoulliNB, ComplementNB, GaussianNB
 from sklearn.linear_model import LogisticRegression
 import gensim
-import nltk
 import pandas as pd
 import numpy as np
 from functools import wraps
@@ -258,7 +256,7 @@ def make_test_model(nlp, sents, label):
         nlp = nlp.load(path)
     else:
         print(f'----- saving model {path}')
-        nlp.load_train_twitter()
+        nlp.load_train_twitter(500000)
         nlp.save(path, nlp)   # takes 1min to load, 1.4gb file
 
     encoded_w2v = nlp.encode(sents)
@@ -317,26 +315,26 @@ if __name__ == "__main__":
     nlp1 = FooNLP(model=W2VModel(mod=LogisticRegression, sg=0, dims=100))   
     nlp1 = make_test_model(nlp1, sents, 'w2vcbow.lr.fulltwitter.foonlp') 
 
-    nlp2 = FooNLP(model=W2VModel(mod=BernoulliNB, sg=0, dims=100))   
-    nlp2 = make_test_model(nlp2, sents, 'w2vcbow.nb.fulltwitter.foonlp') 
+    # nlp2 = FooNLP(model=W2VModel(mod=BernoulliNB, sg=0, dims=100))   
+    # nlp2 = make_test_model(nlp2, sents, 'w2vcbow.nb.fulltwitter.foonlp') 
 
-    nlp3 = FooNLP(model=W2VModel(mod=LogisticRegression, sg=1, dims=100))   
-    nlp3 = make_test_model(nlp3, sents, 'w2vsg.lr.fulltwitter.foonlp') 
+    # nlp3 = FooNLP(model=W2VModel(mod=LogisticRegression, sg=1, dims=100))   
+    # nlp3 = make_test_model(nlp3, sents, 'w2vsg.lr.fulltwitter.foonlp') 
 
-    nlp4 = FooNLP(model=W2VModel(mod=BernoulliNB, sg=1, dims=100)) 
-    nlp4 = make_test_model(nlp4, sents, 'w2vsg.nb.fulltwitter.foonlp') 
+    # nlp4 = FooNLP(model=W2VModel(mod=BernoulliNB, sg=1, dims=100)) 
+    # nlp4 = make_test_model(nlp4, sents, 'w2vsg.nb.fulltwitter.foonlp') 
 
-    nlp5 = FooNLP(model=FooModel(mod=BernoulliNB, embedding=TfidfVectorizer) ) # need NB that works w/ sparse
-    nlp5 = make_test_model(nlp5, sents, 'tfidf.nb.fulltwitter.foonlp')        
+    # nlp5 = FooNLP(model=FooModel(mod=BernoulliNB, embedding=TfidfVectorizer) ) # need NB that works w/ sparse
+    # nlp5 = make_test_model(nlp5, sents, 'tfidf.nb.fulltwitter.foonlp')        
 
-    nlp6 = FooNLP(model=FooModel(mod=BernoulliNB, embedding=CountVectorizer))  # need NB that works w/ sparse 
-    nlp6 = make_test_model(nlp6, sents, 'cvec.nb.fulltwitter.foonlp')
+    # nlp6 = FooNLP(model=FooModel(mod=BernoulliNB, embedding=CountVectorizer))  # need NB that works w/ sparse 
+    # nlp6 = make_test_model(nlp6, sents, 'cvec.nb.fulltwitter.foonlp')
 
-    nlp7 = FooNLP(model=FooModel(mod=LogisticRegression, embedding=TfidfVectorizer) ) # works w/o transform
-    nlp7 = make_test_model(nlp7, sents, 'tfidf.lr.fulltwitter.foonlp')
+    # nlp7 = FooNLP(model=FooModel(mod=LogisticRegression, embedding=TfidfVectorizer) ) # works w/o transform
+    # nlp7 = make_test_model(nlp7, sents, 'tfidf.lr.fulltwitter.foonlp')
 
-    nlp8 = FooNLP(model=FooModel(mod=LogisticRegression, embedding=CountVectorizer))  # works w/o transform
-    nlp8 = make_test_model(nlp8, sents, 'cvec.lr.fulltwitter.foonlp')
+    # nlp8 = FooNLP(model=FooModel(mod=LogisticRegression, embedding=CountVectorizer))  # works w/o transform
+    # nlp8 = make_test_model(nlp8, sents, 'cvec.lr.fulltwitter.foonlp')
 
 
     pp.pprint('ready for inputs, type ^C or empty line to break out')
