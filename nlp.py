@@ -1,6 +1,7 @@
 import re
 import os
-import unidecode
+#import unidecode
+import unicodedata
 import statistics
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -144,7 +145,18 @@ class FooNLP(object):
         return text
 
     def clean(self, text) -> str:
-        text = unidecode.unidecode(text)  # clean accents
+        def remove_accents(text):
+            try:
+                text = unicode(text, 'utf-8')
+            except (TypeError, NameError): # unicode is a default on python 3 
+                pass
+            text = unicodedata.normalize('NFD', text)
+            text = text.encode('ascii', 'ignore')
+            text = text.decode("utf-8")
+            return str(text)
+
+        text = remove_accents(text)  # clean accents
+        # text = unidecode.unidecode(text)  # clean accents
         text = re.sub(r'[^a-zA-Z\s]', '', text, re.I | re.A)
         text = text.lower()
         text = text.strip()
