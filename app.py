@@ -20,7 +20,7 @@ CORS(app)
 nlp = FooNLP()
 models = {}
 models['tfidf.nb'] = nlp.load('/azmodels/tfidf.nb.fulltwitter.foonlp.ser')
-models['w2v.lr'] = nlp.load('/azmodels/w2vcbow.lr.fulltwitter.foonlp.ser')
+# models['w2v.lr'] = nlp.load('/azmodels/w2vcbow.lr.fulltwitter.foonlp.ser')
 print('loaded models', models)
 
 
