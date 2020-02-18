@@ -1,7 +1,5 @@
-from flask import Flask, request, jsonify
-from sklearn.externals import joblib
 from flask_cors import CORS
-import numpy as np
+from flask import Flask, request
 import json
 import datetime
 from textblob import TextBlob
@@ -9,6 +7,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import requests
 from google.cloud import firestore
 import os
+from nlp import FooModel, FooNLP, W2VModel
+
 #
 # XGB2, ISO, LR3, RF are all from sklearn and have common input formats (18 features onehot)
 # LBGM has 4 features not onehot, [carat, color, cut, clarity]
@@ -17,31 +17,16 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+nlp = FooNLP()
 models = {}
-models['XGB2'] = joblib.load('models/sklearn_diamond_xgb_model.pkl')
-models['ISO'] = joblib.load('models/sklearn_diamond_iso_model.pkl')
-models['LR3'] = joblib.load('models/sklearn_diamond_regr_model.pkl')
-models['RF'] = joblib.load('models/sklearn_diamond_rforest_model.pkl')
-# models['LBGM'] = joblib.load('models/az_automodel2.pkl')
+models['tfidf.nb'] = nlp.load('models/tfidf.nb.fulltwitter.foonlp.ser')
+models['w2v.lr'] = nlp.load('models/w2vcbow.lr.fulltwitter.foonlp.ser')
 print('loaded models', models)
 
 
 @app.route('/', methods=['GET'])
 def base():
-    return '<div>Welcome to the Flask ML Runner -- paths available:  /models/<modelName> where modelName is one of the registered models:<P/><P/><PRE> ' +str(models)+'</PRE></div>'
-
-
-# ML diamond predict models
-@app.route('/models/<model>', methods=['POST'])
-def predict(model):
-    if (models.get(model) is None):
-        print('model not found: ',model)
-        return jsonify("[-1]")
-
-    j_data = np.array(request.get_json()['data'])
-    y_hat = np.array2string(models[model].predict(j_data))
-    print('input: ',j_data, ', results:', y_hat)
-    return y_hat
+    return '<div>Welcome to the Flask NLP -- paths available:  /nlp/sa/ <P> Models loaded:<P/><P/><PRE> ' +str(models)+ '</PRE></div>'
 
 
 @app.route('/nlp/history', methods=['GET'])
@@ -89,6 +74,9 @@ def sa_predict(model='all'):
         resp['results'].append(textblob(sentence))
         resp['results'].append(azure_sentiment(sentence))
         resp['results'].append(gcp_sentiment(sentence))
+        resp['results'].append(custom_nlp1(sentence))
+        resp['results'].append(custom_nlp2(sentence))
+
     elif (model == 'azure'):
         resp['results'] = azure_sentiment(sentence)
     elif (model == 'vader'):
@@ -97,6 +85,10 @@ def sa_predict(model='all'):
         resp['results'] = textblob(sentence)
     elif (model == 'google'):
         resp['results'] = gcp_sentiment(sentence)
+    elif (model == 'w2v.lr'):
+        resp['results'] = custom_nlp1(sentence)
+    elif (model == 'tfidf.nb'):
+        resp['results'] = custom_nlp2(sentence)
     else:
         # flag error 
         return 'No Model exists for '+model
@@ -183,25 +175,37 @@ def azure_sentiment(text):
     return resp
 
 
-# all from scratch
-#   - tokenize
-#   - general cleanup
-#   - stem
-#   - lemmitize
-#   - stopwords
-#   - pos tagging ? (spacy)
-#   - named entity recognition (NER) -- not needed
-#   - word vector ?
-#   - sa lexicon ?  stanford?  which ?
-###
-def custom_nlp(text):
-    return None
+def custom_nlp1(text):
+    n = models['w2v.lr']
+    label, prob = n.predict([text])
+    print(label, prob)
+
+    resp = {}
+    resp['model'] = 'Foo W2V LR'
+    resp['extra'] = 'model returns 0 to 1'
+    resp['url'] = 'http://foostack.ai/'
+    resp['rScore'] = prob[0][1]
+    resp['nScore'] = prob[0][1]
+
+    return resp
 
 
-# bert on azure (costly)
-###
-def bert(text):
-    return None
+def custom_nlp2(text):
+    n = models['tfidf.nb']
+    if (n is None):
+        return {}
+
+    label, prob = n.predict([text])
+    print(label, prob)
+
+    resp = {}
+    resp['model'] = 'Foo TFIDF NB'
+    resp['extra'] = 'model returns 0 to 1'
+    resp['url'] = 'http://foostack.ai/'
+    resp['rScore'] = prob[0][1]
+    resp['nScore'] = prob[0][1]
+
+    return resp
 
 
 if __name__ == '__main__':
