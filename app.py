@@ -20,16 +20,18 @@ nlp = FooNLP()
 models = {}
 # models['tfidf.nb'] = nlp.load('/azmodels/tfidf.nb.fulltwitter.foonlp.ser')
 # models['w2v.lr'] = nlp.load('/azmodels/w2vcbow.lr.fulltwitter.foonlp.ser')
-# path = '/azmodels/tfidf.nb.fulltwitter.foonlp.ser'
-# if (os.path.exists(path)):
-#     print(f'----- loading model {path}')
-#     models['tfidf.nb'] = nlp.load('')
-# else:
-#     print(f'----- creating/saving model {path}')
-#     nlp.load_train_twitter(500000, '/azmodels/SentimentAnalysisDataset.csv')
-#     nlp.save(path, nlp)   
-#     models['tfidf.nb'] = nlp
 
+#dir = 'azmodels'
+#path = f'{dir}/tfidf.nb.fulltwitter.foonlp.ser'
+#if (os.path.exists(path)):
+#    print(f'----- loading model {path}')
+#    models['tfidf.nb'] = nlp.load(path)
+#else:
+#    print(f'----- creating/saving model {path}')
+#    nlp.load_train_twitter(500000, f'{dir}/SentimentAnalysisDataset.csv')
+#    nlp.save(path, nlp)   
+#    models['tfidf.nb'] = nlp
+#
 # models['w2v.lr'] = nlp.load('models/w2vcbow.lr.fulltwitter.foonlp.ser')
 print('loaded models', models)
 
