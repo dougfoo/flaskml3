@@ -10,8 +10,7 @@ import os
 from nlp import FooModel, FooNLP, W2VModel
 
 #
-# XGB2, ISO, LR3, RF are all from sklearn and have common input formats (18 features onehot)
-# LBGM has 4 features not onehot, [carat, color, cut, clarity]
+# word2vec and tfidf serialized models
 #
 
 app = Flask(__name__)
